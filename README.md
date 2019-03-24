@@ -29,14 +29,14 @@ streamer = Streamer(port, require_login)
 video_capture = cv2.VideoCapture(0)
 
 while True:
-    _, frame = cap.read()
+    _, frame = video_capture.read()
 
     streamer.update_frame(frame)
 
     if not streamer.is_streaming:
         streamer.start_streaming()
 
-    cv2.waitKey(1)
+    cv2.waitKey(30)
 ```
 
 ### With authentication (A password will be generated for you, expiring every 24 hrs)
@@ -55,30 +55,24 @@ streamer = Streamer(port, require_login, login_file=login_file, login_key=login_
 video_capture = cv2.VideoCapture(0)
 
 while True:
-    _, frame = cap.read()
+    _, frame = video_capture.read()
 
     streamer.update_frame(frame)
 
     if not streamer.is_streaming:
         streamer.start_streaming()
 
-    cv2.waitKey(1)
+    cv2.waitKey(30)
 ```
 
 **If there is no logins file or key found at the path given, it will create one for you**. Logins will be stored in a `.txt` file `logins.txt` but will be **encrypted**. Therefore, unless someone has the key (in this example, `loginkey.txt`) the `logins.txt` file will be able to show logins or passwords. It is very unsafe to keep the login key somewhere publicly accessible; it's suggested you hide it well and do not upload it anywhere.
 
 ### Adding or removing your own logins
 
-Currently, there is no streamlined way to add or remove logins. Fortunately it only needs to be done once per login and can be done very easily:
+In your **root project directory**, you can include a `templates` folder which can be used for password change templates. Your file names must be:
 
-```python
-from flask_opencv_streamer.login_mgr import LoginManager
+- `form.html`: Contains the HTML form for the password change.
+- `pass.html`: Contains the HTML for a pass event
+- `fail.html`: Contains the HTML for a fail event
 
-login_file = "logins.txt"
-login_key = "loginkey.txt"
-
-lm = LoginManager(login_file, login_key)
-lm.add_login("user", "hotdog123")
-lm.add_login("admin", "password")
-lm.remove_login("guest")
-```
+Samples are included here in this repository
